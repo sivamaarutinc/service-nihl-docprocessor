@@ -1,0 +1,96 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-nihl-docprocessor
+  namespace: nihl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-nihl-docprocessor
+  template:
+    metadata:
+      labels:
+        app: service-nihl-docprocessor
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - name: service-nihl-docprocessor
+        image: ${IMAGE_NAME}:${IMAGE_TAG}
+        env:
+          - name: SQLSERVER_DB_USER
+            valueFrom:
+              secretKeyRef:
+                  name: nihlclaim-credentials
+                  key: username
+          - name: SQLSERVER_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                  name: nihlclaim-credentials
+                  key: password
+          - name: SQLSERVER_DB_HOST
+            valueFrom:
+              secretKeyRef:
+                  name: nihlclaim-credentials
+                  key: host
+          - name: SQLSERVER_DB_PORT
+            valueFrom:
+              secretKeyRef:
+                  name: nihlclaim-credentials
+                  key: port
+          - name: SQLSERVER_DB_NAME
+            valueFrom:
+              secretKeyRef:
+                  name: nihlclaim-credentials
+                  key: dbname
+          - name:  SFTP_PROTOCOL
+            value: "sftp"
+          - name:  SFTP_HOST
+            value: "DLA5FT01.wsib.on.ca"
+          - name:  SFTP_PORT
+            value: "22"
+          - name:  SFTP_USER
+            value: "uhl000"
+          - name:  SFTP_PASSWORD
+            value: "Summer2020!"
+          - name:  SFTP_PATH
+            value: "/appldat01/nihl/uhl000/data/"
+          - name:  DOC_PATH
+            value: "/tmp/Documents"
+          - name:  PDF_PATH
+            value: "/PDF"
+          - name:  PDFA_PATH
+            value: "/tmp/PDFS"
+          - name:  DOC_ROOT
+            value: "/tmp/"
+          - name:  PATH_FORMAT
+            value: "/"
+
+        resources:
+          limits:
+            memory:  "4000Mi"
+            cpu:  "501m"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: tz-newyork
+          mountPath: /etc/localtime
+      volumes:
+        - name: tz-newyork
+          hostPath:
+            path: /usr/share/zoneinfo/America/New_York
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-nihl-docprocessor
+  namespace: nihl
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: service-nihl-docprocessor

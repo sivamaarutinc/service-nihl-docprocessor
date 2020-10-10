@@ -1,0 +1,111 @@
+server:
+    port: 8080
+    servlet:
+        context-path: /nihl/api
+spring:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+    servlet:
+      multipart:
+        max-file-size: 10MB
+        max-request-size: 10MB
+        enabled: true
+        file-size-threshold: 10MB
+    main:
+      banner-mode: "off"
+
+    datasource:
+      url: jdbc:sqlserver://${SQLSERVER_DB_HOST};database=${SQLSERVER_DB_NAME};
+      driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      username: ${SQLSERVER_DB_USER}
+      password: ${SQLSERVER_DB_PASSWORD}
+
+    jpa:
+      show-sql: false
+      database-platform: org.hibernate.dialect.SQLServer2012Dialect
+      properties:
+        hibernate.enable_lazy_load_no_trans: true
+
+document:
+  root: ${DOC_ROOT}
+  format: ${PATH_FORMAT}
+  path: ${DOC_PATH}
+  pdf:
+   path: ${PDF_PATH}
+  pdfa:
+   path: ${PDFA_PATH}
+
+
+cronjob:
+  reprocess-claims: '0 0 7 * * ?'
+
+cors:
+  path:
+  allowed:
+    methods:
+    headers:
+    origins:
+
+#============================================================================
+# SFTP Client Setting
+#============================================================================
+ 
+sftp.client.protocol: ${SFTP_PROTOCOL}
+ # ip 
+sftp.client.host: ${SFTP_HOST}
+ # 
+sftp.client.port: ${SFTP_PORT}
+ # username 
+sftp.client.username: ${SFTP_USER}
+ # 
+sftp.client.password: ${SFTP_PASSWORD}
+ # 
+sftp.client.root: ${SFTP_PATH}
+ # 
+sftp.client.privateKey:
+ # 
+sftp.client.passphrase:
+# 
+sftp.client.sessionStrictHostKeyChecking: no
+ # session connection timeout
+sftp.client.sessionConnectTimeout: 15000
+ # channel connection timeout
+sftp.client.channelConnectedTimeout: 15000
+---
+spring:
+    profiles: dev
+    datasource:
+      url: jdbc:sqlserver://${SQLSERVER_DB_HOST};database=${SQLSERVER_DB_NAME};
+      driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      username: ${SQLSERVER_DB_USER}
+      password: ${SQLSERVER_DB_PASSWORD}
+server:
+    servlet:
+      context-path: /nihl/dev
+---
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:sqlserver://nihldev.database.windows.net;database=testdb;
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    username: mkchoithani
+    password: duhtM@4410
+server:
+  servlet:
+    context-path: /nihl/test
+
+---
+spring:
+  profiles: prod
+  datasource:
+      url: jdbc:sqlserver://${SQLSERVER_DB_HOST};database=${SQLSERVER_DB_NAME};
+      driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      username: ${SQLSERVER_DB_USER}
+      password: ${SQLSERVER_DB_PASSWORD}
+server:
+  servlet:
+    context-path: /nihl/prod
+virusscan:
+  url: http://52.224.25.193/scan

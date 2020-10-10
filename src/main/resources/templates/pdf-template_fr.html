@@ -1,0 +1,372 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WSIB-PRÉTENDRE</title>
+<style type="text/css">
+div.header {
+	position: running(header);
+	right-padding: 300px;
+}
+
+div.footer {
+	text-align: center;
+	position: running(footer);
+}
+
+@page {
+	margin-top: 70mm;
+	margin-bottom: 30mm;
+}
+
+@page { @top-left { content:element(header)
+	
+}
+
+}
+@page { @bottom-left { content:element(footer)
+	
+}
+
+}
+tr:nth-of-type(odd) {
+  background: #fff;
+  border-bottom: 1px solid #dee2e6;
+}
+
+#pagenumber:before {
+	content: counter(page);
+}
+
+#pagecount:before {
+	content: counter(pages);
+}
+
+.table-header-set {
+	color: #fff;
+	background-color: #003359;
+	width: 241px;
+}
+
+</style>
+</head>
+<body style="font-family: Muli, sans-serif; line-height: 24px;">
+<div>
+	<div class='header' align="left">
+		<img src="../logo.png" alt="WSIB-claims" width="200px" />
+		<p>
+			<span style="font-size: 31px; text-align: left;line-height: 22px;">
+
+Soumettre un
+réclamation pour perte auditive liée au travail et due au bruit</span><br />
+		</p>
+		<p><span th:text="${'Date et heure de soumission: '+ submissionDate}"></span><br /></p>
+
+		
+	</div>
+	<div class="footer" style="font-weight:70;font-size:9px;">
+WSIB siège social : 200 Front Street West | Toronto,	Ontario, Canada, M5V3J1 | 1-800-387-0750 | TTY/ ATS1-800-387-0050 | wsib.ca
+<span style="padding-left: 50px;">Page <span id="pagenumber"/> de <span id="pagecount"/></span>
+</div>
+
+	<div class="content">
+		<p class="parag">
+			<span style="font-size: 21px; font-weight: bold;">Mes renseignements</span>
+		</p>
+		<p class="parag">
+			<span>Prénom:</span><br /> <span th:text="${firstName}"></span>
+		</p>
+		<p class="parag">
+			<span>Nom de familie:</span><br /> <span th:text="${lastName}"></span>
+		</p>
+		<p>
+			<span>Date de naissance:</span><br /> <span th:text="${dob}"></span>
+		</p>
+		<p>
+			<span>Numéro d'assurance sociale (facultatif):</span><br /> <span
+				th:text="${sin}"></span>
+		</p>
+		<p>
+			<span>Addresse municipale:</span><br /> <span th:text="${address}"></span>
+		</p>
+		<p>
+			<span>Appartement / bureau:</span><br /> <span th:text="${apt}"></span>
+		</p>
+		<p>
+			<span>Ville:</span><br /> <span th:text="${city}"></span>
+		</p>
+		<p>
+			<span>Province/Etat:</span><br /> <span th:text="${state}"></span>
+		</p>
+		<p>
+			<span>Code postal:</span><br /> <span th:text="${postalCode}"></span>
+		</p>
+		<p>
+			<span>Pays:</span><br /> <span th:text="${country}"></span>
+		</p>
+		<p>
+			<span>Numéro de téléphone principal:</span><br /> <span
+				th:text="${primaryPhNum}"></span>
+		</p>
+		<p>
+			<span>
+Numéro de téléphone secondaire (facultatif):</span><br /> <span
+				th:text="${secondaryPhNum}"></span>
+		</p>
+		<p>
+			<span>Préférence de langue:</span><br />  <span
+				th:if="${language == 'EN'}">Anglais</span> <span
+				th:if="${language == 'FR'}">Français</span> <span
+				th:if="${language == 'OTHER'}">
+				<span
+				th:text="${otherLanguage}"></span></span></span>
+		</p>
+		<p>
+			<span style="font-size: 21px; font-weight: bold;">Soins de santé</span><br />
+
+		</p>
+		<p>
+			<span>L'année où vous avez remarqué une perte auditive pour la première fois:</span><br /> <span
+				th:text="${hearingLossDate}"></span>
+		</p>
+
+		<p>
+			<span>Portez-vous une aide auditive?:</span><br /> <span
+				th:if="${hasHearingAid}">oui</span> <span
+				th:unless="${hasHearingAid}">non</span>
+		</p>
+		<span th:if="${hasHearingAid}">
+			<p>
+				<span>Quand avez-vous commencé à porter votre aide auditive?</span><br /> <span
+					th:text="${hearingAidDate}"></span>
+			</p>
+		</span>
+		<p>
+			<span>
+Date de votre premier audiogramme:</span><br /> <span
+				th:text="${audiogramDate}"></span>
+		</p>
+		
+
+		<p>
+			<span>Nom de la clinique d'audiogramme:</span><br /> <span
+				th:text="${audiogramName}"></span>
+		</p>
+		<p>
+			<span>
+Adresse de la clinique d'audiogramme:</span><br /> <span
+				th:text="${audiogramAddress}"></span>
+		</p>
+		<p>
+			<span>
+Numéro de téléphone de la clinique d'audiogramme:</span><br /> <span
+				th:text="${audiogramPhNum}"></span>
+		</p>
+
+		<p>
+			<span>
+Avez-vous consulté un spécialiste de l'oreille-nez et de la gorge (ORL)?:</span><br />
+			<span th:if="${visitedENT}">oui</span> <span
+				th:unless="${visitedENT}">non</span>
+		</p>
+		<span th:if="${visitedENT}">
+			<p>
+				<span>
+Date de rendez-vous chez le spécialiste des oreilles, du nez et de la gorge:</span><br />
+				<span th:text="${entAppoinmentDate}"></span>
+			</p>
+			<p>
+				<span>Nom du spécialiste de l'oreille, du nez et de la gorge:</span><br /> <span
+					th:text="${entName}"></span>
+			</p>
+			<p>
+				<span>
+Adresse du spécialiste des oreilles, du nez et de la gorge:</span><br /> <span
+					th:text="${entAddress}"></span>
+			</p>
+			<p>
+				<span>
+Numéro de téléphone du spécialiste des oreilles, du nez et de la gorge:</span><br />
+				<span th:text="${entPhNum}"></span>
+			</p>
+		</span>
+		<p>
+			<span>
+Avez-vous des bourdonnements dans vos oreilles?:</span><br /> <span
+				th:if="${ringingInEar}">oui</span> <span th:unless="${ringingInEar}">non</span>
+		</p>
+		<span th:if="${ringingInEar}">
+			<p>
+				<span>Depuis combien de temps avez-vous ressenti le bourdonnement dans vos oreilles?</span><br />
+				<span th:text="${ringingDuration}"></span>
+			</p>
+			<p>
+				<span>Le bourdonnement dans vos oreilles est-il grave?:</span><br /> <span
+					th:if="${hasSevereRinging}">oui</span> <span
+					th:unless="${hasSevereRinging}">non</span>
+			</p>
+			<p>
+				<span>
+La sonnerie dans vos oreilles est-elle constante?:</span><br /> <span
+					th:if="${hasConstantRinging}">oui</span> <span
+					th:unless="${hasConstantRinging}">non</span>
+			</p>
+		</span>
+		<p>
+			<div>
+				<span style="font-size: 21px; font-weight: bold;"> 
+Emploi</span><br />
+			</div>
+		</p>
+		
+
+		<p>
+			<span>
+Êtes-vous à la retraite?:</span><br /> <span th:if="${hasRetired}">oui</span>
+			<span th:unless="${hasRetired}">non</span>
+		</p>
+		<span th:if="${hasRetired}">
+			<p>
+				<span>Date de la retraite:</span><br /> <span th:text="${retireDate}"></span>
+			</p>
+		</span> <span th:unless="${hasRetired}">
+			<p>
+				<span>Avez-vous actuellement un emploi?:</span><br /> <span
+					th:if="${currentlyEmployed}">oui</span> <span
+					th:unless="${currentlyEmployed}">non</span>
+			</p> <span th:if="${currentlyEmployed}">
+				<p>>
+					<span>Nom de votre employeur actuel:</span><br /> <span
+						th:text="${currentEmployerName}"></span>
+				</p>
+				<p>
+					<span>
+Adresse de votre employeur actuel:</span><br /> <span
+						th:text="${currentEmployerAddress}"></span>
+				</p>
+				<p >
+					<span>Numéro de téléphone de votre employeur actuel:</span><br /> <span
+						th:text="${currentEmployerPhNum}"></span>
+				</p>
+				<p>
+					<span>Travaillez-vous actuellement dans des conditions de bruit dangereuses?:</span><br />
+					<span th:if="${currentEmployerHazardous}">oui</span> <span
+						th:unless="${currentEmployerHazardous}">non</span>
+				</p>
+		</span>
+		<span th:unless="${currentlyEmployed}">
+				<p>
+					<span>Veuillez expliquer votre situation d'emploi actuelle:</span><br /> <span
+						th:text="${currentSituation}"></span>
+				</p>
+				
+		</span>
+		</span>
+		
+				<p>
+			<span>
+Avez-vous déjà été indépendant?:</span><br /> <span
+				th:if="${selfEmployed}">oui</span> <span th:unless="${selfEmployed}">non</span>
+		</p>
+		<span th:if="${selfEmployed}">
+			<p>
+				<span>
+Aviez-vous une assurance personnelle ou une assurance facultative
+fourni par le WSIB?:</span><br /> <span th:if="${selfEmpHasInsurance}">oui</span>
+				<span th:unless="${selfEmpHasInsurance}">non</span>
+			</p> <span th:if="${selfEmpHasInsurance}">
+
+				<p>
+					<span>
+Nom de l'entreprise:</span><br /> <span
+						th:text="${selfEmpName}"></span>
+				</p>
+				<p>
+					<span>Adresse de votre entreprise:</span><br /> <span
+						th:text="${selfEmpAddress}"></span>
+				</p>
+				<p>
+					<span>When were you self-employed at your business?</span><br /> <span
+						th:text="${'Du    : '+ selfEmpStartDt}"></span> <span
+						th:text="${' Au    : '+ selfEmpEndDate}"></span>
+				</p>
+
+				<p>
+			</span>
+		</span>
+					<span>
+Avez-vous utilisé des machines bruyantes, du matériel, des armes à feu,
+joué de la musique forte ou participé à d'autres activités en dehors de
+travail?:</span><br /> <span th:if="${noisyEqpmt}">oui</span> <span
+						th:unless="${noisyEqpmt}">non</span>
+				</p> <span th:if="${noisyEqpmt}">
+					<p>
+						<span>
+Veuillez décrire les activités auxquelles vous avez participé
+et la fréquence:</span><br /> <span th:text="${noisyEqmtDetails}"></span>
+					</p>
+			</span>
+
+		<br />
+		
+		<table style="border-color: grey;border-spacing: 2px;-fs-table-paginate: paginate;" class="table-striped">
+			<thead>
+				<tr>
+					<th class="table-header-set">Nom et coordonnées de l’employeur</th>
+<th class="table-header-set">L'employeur est-il toujours en affaires?</th>
+					<th class="table-header-set">Votre profession/titre</th>
+					<th class="table-header-set">Dated</th>
+					<th class="table-header-set">Outils utilisés et nombre d’heures d’utilisation par jour</th>
+
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:if="${pastInfo.empty}">
+					<td colspan="2"></td>
+				</tr>
+				<tr th:each="pastInfo : ${pastInfo}">
+					<td><span th:text="${pastInfo.address}"> </span></td>
+					
+					<td><span th:text="${pastInfo.isStillInBusinessFr}"> </span></td>
+					<td><span th:text="${pastInfo.occupation}"> </span></td>
+					<td><span th:text="${pastInfo.dateFr}"> </span></td>
+					<td><span th:text="${pastInfo.toolsUsed}"> </span></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<p>
+			<div style="font-size: 21px; font-weight: bold;">Justificatif
+Des documents</div>
+		</p>
+
+		<p>
+			<span>Audiogramme:</span>
+			<table>
+				
+				<th:block th:each="docAud : ${audiogram}">
+					
+					<tr>
+						<td><span th:text="${docAud}" /></td>
+					</tr>
+					<tr>&nbsp;</tr>
+			</table>
+		</p>
+		<p>
+			<span>Emploi:</span>
+			<table>
+				<th:block th:each="doc : ${documents}">
+					
+					<tr>
+						<td><span th:text="${doc.documentName}" /></td>
+					</tr>
+					<tr>&nbsp;</tr>
+			</table>
+		</p>
+	</div>
+</div>
+</body>
+</html>

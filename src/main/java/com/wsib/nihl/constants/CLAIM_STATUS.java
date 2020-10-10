@@ -1,0 +1,5 @@
+package com.wsib.nihl.constants;
+
+public enum CLAIM_STATUS {
+	PENDING, SUBMITTED, TRANSFER_FAILED, TRANSFER_SUCCESS, TRANSFER_IN_PROGRESS
+}
