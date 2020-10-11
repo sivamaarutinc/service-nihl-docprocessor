@@ -20,6 +20,8 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -92,11 +94,24 @@ class DocGenerationServiceTest {
 	private final int healthCareInfoId = 1;
 	private final int pastEmploymentIfoId = 1;
 
-	@Test
-	void testSendDocuments() throws Exception {
+	@BeforeEach
+	void beforeEach() {
 		Path pathRoot = Paths.get(applicationProperties.getDocRoot());
 		File file = pathRoot.toFile();
 		file.mkdirs();
+	}
+	
+	@AfterEach
+	void afterEach() throws IOException {
+		Path pathRoot = Paths.get(applicationProperties.getDocRoot());
+		File file = pathRoot.toFile();
+		if (pathRoot.toFile().exists()) {
+			FileUtils.deleteDirectory(file);
+		}
+	}	
+	
+	@Test
+	void testSendDocuments() throws Exception {
 		DocumentRequest documentRequest = getDocumentRequest();
 		documentRequest.setClaimId(claimId);
 		String htmlContentToRender = getTemplateFR();
@@ -138,106 +153,98 @@ class DocGenerationServiceTest {
 		assertEquals("sent", docGenerationService.sendDocuments(documentRequest));
 	}
 
-	/*
-	 * @Test void testSendDocumentsDocumentListEmpty() throws Exception {
-	 * 
-	 * DocumentRequest documentRequest = getDocumentRequest();
-	 * documentRequest.setClaimId(claimId); String htmlContentToRender =
-	 * getTemplateFR(); Claim claim = getClaim(); List<PastEmploymentInformation>
-	 * pastEmploymentInformationList =
-	 * Arrays.asList(getPastEmploymentInformation());
-	 * claim.getEmploymentInformation().setPastEmploymentInformationList(
-	 * pastEmploymentInformationList); claim.setCommunicationLanguage("FR");
-	 * claim.setPersonalInformation(getPersonalInformation());
-	 * claim.setClaimDocumentsList(new ArrayList<>());
-	 * when(claimService.findByClaimId(Mockito.anyInt())).thenReturn(claim);
-	 * when(applicationPropertiesMock.getDocPath()).thenReturn(applicationProperties
-	 * .getDocPath());
-	 * when(applicationPropertiesMock.getPdfPath()).thenReturn(applicationProperties
-	 * .getPdfPath()); when(templateEngine.process(Mockito.anyString(),
-	 * Mockito.any(Context.class))).thenReturn(htmlContentToRender);
-	 * when(applicationPropertiesMock.getDocRoot()).thenReturn(applicationProperties
-	 * .getDocRoot()); when(applicationPropertiesMock.getPathFormat()).thenReturn(
-	 * applicationProperties.getPathFormat()); assertEquals("sent",
-	 * docGenerationService.sendDocuments(documentRequest)); }
-	 * 
-	 * @Test void testSendDocumentsPersonalAndHelthInformationWithNullValues()
-	 * throws Exception {
-	 * 
-	 * DocumentRequest documentRequest = getDocumentRequest();
-	 * documentRequest.setClaimId(claimId); String htmlContentToRender =
-	 * getTemplateFR(); Claim claim = getClaim(); List<PastEmploymentInformation>
-	 * pastEmploymentInformationList =
-	 * Arrays.asList(getPastEmploymentInformation());
-	 * claim.getEmploymentInformation().setPastEmploymentInformationList(
-	 * pastEmploymentInformationList); claim.setCommunicationLanguage("FR");
-	 * claim.setPersonalInformation(new PersonalInformation());
-	 * claim.setHealthCareProviderInformation(new HealthCareProviderInformation());
-	 * // claim.setEmploymentInformation(new EmploymentInformation());
-	 * when(claimService.findByClaimId(Mockito.anyInt())).thenReturn(claim);
-	 * when(applicationPropertiesMock.getDocPath()).thenReturn(applicationProperties
-	 * .getDocPath());
-	 * when(applicationPropertiesMock.getPdfPath()).thenReturn(applicationProperties
-	 * .getPdfPath()); when(templateEngine.process(Mockito.anyString(),
-	 * Mockito.any(Context.class))).thenReturn(htmlContentToRender);
-	 * when(applicationPropertiesMock.getDocRoot()).thenReturn(applicationProperties
-	 * .getDocRoot()); when(applicationPropertiesMock.getPathFormat()).thenReturn(
-	 * applicationProperties.getPathFormat()); assertEquals("sent",
-	 * docGenerationService.sendDocuments(documentRequest)); }
-	 * 
-	 * @Test void testSendDocumentsPersonalInformationWithEmtyValue() throws
-	 * Exception {
-	 * 
-	 * DocumentRequest documentRequest = getDocumentRequest();
-	 * documentRequest.setClaimId(claimId); PersonalInformation personalInformation
-	 * = getPersonalInformation(); personalInformation.setSocialInsuranceNumber("");
-	 * String htmlContentToRender = getTemplateFR(); Claim claim = getClaim();
-	 * List<PastEmploymentInformation> pastEmploymentInformationList =
-	 * Arrays.asList(getPastEmploymentInformation());
-	 * claim.getEmploymentInformation().setPastEmploymentInformationList(
-	 * pastEmploymentInformationList); claim.setCommunicationLanguage("FR");
-	 * claim.setPersonalInformation(personalInformation);
-	 * claim.getClaimDocumentsList().get(0).setDocumentType("Audiogram");
-	 * claim.getClaimDocumentsList().get(0).setDocumentName(null);
-	 * claim.setHealthCareProviderInformation(new HealthCareProviderInformation());
-	 * claim.getEmploymentInformation().getPastEmploymentInformationList().get(0).
-	 * setToolsUsedList(getToolsUseds()); claim.setClaimDocumentsList(null);
-	 * when(claimService.findByClaimId(Mockito.anyInt())).thenReturn(claim);
-	 * when(applicationPropertiesMock.getDocPath()).thenReturn(applicationProperties
-	 * .getDocPath());
-	 * when(applicationPropertiesMock.getPdfPath()).thenReturn(applicationProperties
-	 * .getPdfPath()); when(templateEngine.process(Mockito.anyString(),
-	 * Mockito.any(Context.class))).thenReturn(htmlContentToRender);
-	 * when(applicationPropertiesMock.getDocRoot()).thenReturn(applicationProperties
-	 * .getDocRoot()); when(applicationPropertiesMock.getPathFormat()).thenReturn(
-	 * applicationProperties.getPathFormat()); assertEquals("sent",
-	 * docGenerationService.sendDocuments(documentRequest)); }
-	 */
+	
+	@Test
+	void testSendDocumentsDocumentListEmpty() throws Exception {
 
-	/*
-	 * @Test void testSendDocumentsRefIdAndHelCareIdNotSame() throws Exception {
-	 * DocumentRequest documentRequest = getDocumentRequest(); String
-	 * htmlContentToRender = getTemplateFR(); Claim claim = getClaim();
-	 * claim.getClaimDocumentsList().get(0).setReferenceId(5);
-	 * List<PastEmploymentInformation> pastEmploymentInformationList =
-	 * Arrays.asList(getPastEmploymentInformation());
-	 * claim.getEmploymentInformation().setPastEmploymentInformationList(
-	 * pastEmploymentInformationList); claim.setCommunicationLanguage("FR");
-	 * claim.setPersonalInformation(getPersonalInformation());
-	 * claim.getEmploymentInformation().getPastEmploymentInformationList().get(0).
-	 * setPastEmploymentInfoId(5);
-	 * when(applicationPropertiesMock.getDocPath()).thenReturn(applicationProperties
-	 * .getDocPath());
-	 * when(applicationPropertiesMock.getPdfPath()).thenReturn(applicationProperties
-	 * .getPdfPath());
-	 * when(claimService.findByClaimId(documentRequest.getClaimId())).thenReturn(
-	 * claim); when(templateEngine.process(Mockito.anyString(),
-	 * Mockito.any(Context.class))).thenReturn(htmlContentToRender);
-	 * when(applicationPropertiesMock.getDocRoot()).thenReturn(applicationProperties
-	 * .getDocRoot()); when(applicationPropertiesMock.getPathFormat()).thenReturn(
-	 * applicationProperties.getPathFormat()); assertEquals("sent",
-	 * docGenerationService.sendDocuments(documentRequest)); }
-	 */
+		DocumentRequest documentRequest = getDocumentRequest();
+		documentRequest.setClaimId(claimId);
+		String htmlContentToRender = getTemplateFR();
+		Claim claim = getClaim();
+		List<PastEmploymentInformation> pastEmploymentInformationList = Arrays.asList(getPastEmploymentInformation());
+		claim.getEmploymentInformation().setPastEmploymentInformationList(pastEmploymentInformationList);
+		claim.setCommunicationLanguage("FR");
+		claim.setPersonalInformation(getPersonalInformation());
+		claim.setClaimDocumentsList(new ArrayList<>());
+		when(claimService.findByClaimId(Mockito.anyInt())).thenReturn(claim);
+		when(applicationPropertiesMock.getDocPath()).thenReturn(applicationProperties.getDocPath());
+		when(applicationPropertiesMock.getPdfPath()).thenReturn(applicationProperties.getPdfPath());
+		when(templateEngine.process(Mockito.anyString(), Mockito.any(Context.class))).thenReturn(htmlContentToRender);
+		when(applicationPropertiesMock.getDocRoot()).thenReturn(applicationProperties.getDocRoot());
+		when(applicationPropertiesMock.getPathFormat()).thenReturn(applicationProperties.getPathFormat());
+		assertEquals("sent", docGenerationService.sendDocuments(documentRequest));
+	}
+
+	@Test
+	void testSendDocumentsPersonalAndHelthInformationWithNullValues() throws Exception {
+
+		DocumentRequest documentRequest = getDocumentRequest();
+		documentRequest.setClaimId(claimId);
+		String htmlContentToRender = getTemplateFR();
+		Claim claim = getClaim();
+		List<PastEmploymentInformation> pastEmploymentInformationList = Arrays.asList(getPastEmploymentInformation());
+		claim.getEmploymentInformation().setPastEmploymentInformationList(pastEmploymentInformationList);
+		claim.setCommunicationLanguage("FR");
+		claim.setPersonalInformation(new PersonalInformation());
+		claim.setHealthCareProviderInformation(new HealthCareProviderInformation());
+		// claim.setEmploymentInformation(new EmploymentInformation());
+		when(claimService.findByClaimId(Mockito.anyInt())).thenReturn(claim);
+		when(applicationPropertiesMock.getDocPath()).thenReturn(applicationProperties.getDocPath());
+		when(applicationPropertiesMock.getPdfPath()).thenReturn(applicationProperties.getPdfPath());
+		when(templateEngine.process(Mockito.anyString(), Mockito.any(Context.class))).thenReturn(htmlContentToRender);
+		when(applicationPropertiesMock.getDocRoot()).thenReturn(applicationProperties.getDocRoot());
+		when(applicationPropertiesMock.getPathFormat()).thenReturn(applicationProperties.getPathFormat());
+		assertEquals("sent", docGenerationService.sendDocuments(documentRequest));
+	}
+
+	@Test
+	void testSendDocumentsPersonalInformationWithEmtyValue() throws Exception {
+
+		DocumentRequest documentRequest = getDocumentRequest();
+		documentRequest.setClaimId(claimId);
+		PersonalInformation personalInformation = getPersonalInformation();
+		personalInformation.setSocialInsuranceNumber("");
+		String htmlContentToRender = getTemplateFR();
+		Claim claim = getClaim();
+		List<PastEmploymentInformation> pastEmploymentInformationList = Arrays.asList(getPastEmploymentInformation());
+		claim.getEmploymentInformation().setPastEmploymentInformationList(pastEmploymentInformationList);
+		claim.setCommunicationLanguage("FR");
+		claim.setPersonalInformation(personalInformation);
+		claim.getClaimDocumentsList().get(0).setDocumentType("Audiogram");
+		claim.getClaimDocumentsList().get(0).setDocumentName(null);
+		claim.setHealthCareProviderInformation(new HealthCareProviderInformation());
+		claim.getEmploymentInformation().getPastEmploymentInformationList().get(0).setToolsUsedList(getToolsUseds());
+		claim.setClaimDocumentsList(null);
+		when(claimService.findByClaimId(Mockito.anyInt())).thenReturn(claim);
+		when(applicationPropertiesMock.getDocPath()).thenReturn(applicationProperties.getDocPath());
+		when(applicationPropertiesMock.getPdfPath()).thenReturn(applicationProperties.getPdfPath());
+		when(templateEngine.process(Mockito.anyString(), Mockito.any(Context.class))).thenReturn(htmlContentToRender);
+		when(applicationPropertiesMock.getDocRoot()).thenReturn(applicationProperties.getDocRoot());
+		when(applicationPropertiesMock.getPathFormat()).thenReturn(applicationProperties.getPathFormat());
+		assertEquals("sent", docGenerationService.sendDocuments(documentRequest));
+	}
+	 
+
+	
+	@Test
+	void testSendDocumentsRefIdAndHelCareIdNotSame() throws Exception {
+		DocumentRequest documentRequest = getDocumentRequest();
+		String htmlContentToRender = getTemplateFR();
+		Claim claim = getClaim();
+		claim.getClaimDocumentsList().get(0).setReferenceId(5);
+		List<PastEmploymentInformation> pastEmploymentInformationList = Arrays.asList(getPastEmploymentInformation());
+		claim.getEmploymentInformation().setPastEmploymentInformationList(pastEmploymentInformationList);
+		claim.setCommunicationLanguage("FR");
+		claim.setPersonalInformation(getPersonalInformation());
+		claim.getEmploymentInformation().getPastEmploymentInformationList().get(0).setPastEmploymentInfoId(5);
+		when(applicationPropertiesMock.getDocPath()).thenReturn(applicationProperties.getDocPath());
+		when(applicationPropertiesMock.getPdfPath()).thenReturn(applicationProperties.getPdfPath());
+		when(claimService.findByClaimId(documentRequest.getClaimId())).thenReturn(claim);
+		when(templateEngine.process(Mockito.anyString(), Mockito.any(Context.class))).thenReturn(htmlContentToRender);
+		when(applicationPropertiesMock.getDocRoot()).thenReturn(applicationProperties.getDocRoot());
+		when(applicationPropertiesMock.getPathFormat()).thenReturn(applicationProperties.getPathFormat());
+		assertEquals("sent", docGenerationService.sendDocuments(documentRequest));
+	}
 
 	@Test
 	void testSendDocumentsWithNullBirthday() throws Exception {
@@ -302,7 +309,37 @@ class DocGenerationServiceTest {
 		docGenerationService.generateXML(claim, path, docName);
 	}
 
-//	Path issue
+	@Test
+	void testSendDocumentsXMLEqualReferenceAndHelthcareInfoId() throws Exception {
+		DocumentRequest documentRequest = getDocumentRequest();
+		documentRequest.setClaimId(claimId);
+		String htmlContentToRender = getTemplateFR();
+		Claim claim = getClaim();
+		List<PastEmploymentInformation> pastEmploymentInformationList = Arrays.asList(getPastEmploymentInformation());
+		claim.getEmploymentInformation().setPastEmploymentInformationList(pastEmploymentInformationList);
+		claim.setCommunicationLanguage("FR");
+		claim.setPersonalInformation(getPersonalInformation());
+		ClaimDocuments claimDocuments = getClaimDocuments();
+		claimDocuments.setFormId("3275");
+		claimDocuments.setReferenceId(1);
+		claimDocuments.setDocument(mockMultipartFile.getBytes());
+		claimDocuments.setDocumentName("file1.PDF");
+		claimDocuments.setDocumentSize("documentSize");
+		claimDocuments.setDocumentType("PDF");
+		claimDocuments.setReferenceId(1);
+		List<ClaimDocuments> claimDocumentsList = new ArrayList<>();
+		claimDocumentsList.add(claimDocuments);
+		claim.setClaimDocumentsList(claimDocumentsList);
+		when(claimService.findByClaimId(Mockito.anyInt())).thenReturn(claim);
+		when(applicationPropertiesMock.getDocPath()).thenReturn(applicationProperties.getDocPath());
+		when(applicationPropertiesMock.getPdfPath()).thenReturn(applicationProperties.getPdfPath());
+		when(templateEngine.process(Mockito.anyString(), Mockito.any(Context.class))).thenReturn(htmlContentToRender);
+		when(applicationPropertiesMock.getDocRoot()).thenReturn(applicationProperties.getDocRoot());
+		when(applicationPropertiesMock.getPathFormat()).thenReturn(applicationProperties.getPathFormat());
+		assertEquals("sent", docGenerationService.sendDocuments(documentRequest));
+	}
+	
+	
 //	@Test
 //	void testGenerateXMLEqualReferenceAndHelthcareInfoId() throws IOException, JAXBException, ParseException {
 //		Claim claim = getClaim();
@@ -315,7 +352,6 @@ class DocGenerationServiceTest {
 //		claimDocuments.setDocumentName("file1.PDF");
 //		claimDocuments.setDocumentSize("documentSize");
 //		claimDocuments.setDocumentType("PDF");
-//		claimDocuments.setFormId("1");
 //		claimDocuments.setReferenceId(1);
 //		List<ClaimDocuments> claimDocumentsList = new ArrayList<>();
 //		claimDocumentsList.add(claimDocuments);
